@@ -9,6 +9,10 @@ import org.eternity.movie.reservation.domain.SequenceCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.Set;
@@ -19,6 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JpaTransactionTest {
 	@Autowired
 	private EntityManager em;
+
+	@Autowired
+	private TransactionTemplate txTemplate;
 
 	@Test
 	public void optimistic_lock_version() {
@@ -34,6 +41,7 @@ public class JpaTransactionTest {
 	}
 
 	@Test
+	@Rollback(value = false)
 	public void jpql_lock_mode() {
 		em.persist(new Movie("영화1", 120, Money.wons(10000), null));
 		em.persist(new Movie("영화2", 120, Money.wons(10000), null));
@@ -41,13 +49,11 @@ public class JpaTransactionTest {
 		em.clear();
 
 		List<Movie> movies = em.createQuery("select m from Movie m", Movie.class)
-								.setLockMode(LockModeType.OPTIMISTIC)
-							    .getResultList();
+				.setLockMode(LockModeType.OPTIMISTIC)
+				.getResultList();
 
 		long result = movies.stream().mapToLong(m -> m.getFee().longValue()).sum();
 
 		assertThat(result).isEqualTo(20000);
-
-		em.flush();
 	}
 }
