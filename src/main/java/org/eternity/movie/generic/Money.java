@@ -9,10 +9,11 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Embeddable
-@EqualsAndHashCode @ToString @AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor @NoArgsConstructor
 public class Money {
     public static final Money ZERO = Money.wons(0);
 
@@ -68,6 +69,18 @@ public class Money {
 
     public Double doubleValue() {
         return fee.doubleValue();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Money money = (Money) o;
+        return Objects.equals(fee.longValue(), money.fee.longValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(fee);
     }
 
     public String toString() {
