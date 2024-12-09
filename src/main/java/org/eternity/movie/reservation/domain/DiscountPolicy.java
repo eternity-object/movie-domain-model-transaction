@@ -17,12 +17,19 @@ public abstract class DiscountPolicy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "POLICY_ID")
     private Set<DiscountCondition> conditions = new HashSet<>();
 
-    public DiscountPolicy(Set<DiscountCondition> conditions) {
+    public DiscountPolicy(String name, Set<DiscountCondition> conditions) {
+        this.name = name;
         this.conditions = conditions;
+    }
+
+    public void changeName(String name) {
+        this.name = name;
     }
 
     public Money calculateDiscount(Screening screening) {

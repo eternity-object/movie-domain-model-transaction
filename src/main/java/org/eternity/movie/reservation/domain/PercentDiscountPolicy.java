@@ -14,8 +14,8 @@ import java.util.Set;
 public class PercentDiscountPolicy extends DiscountPolicy {
     private double percent;
 
-    public PercentDiscountPolicy(double percent, Set<DiscountCondition> conditions) {
-        super(conditions);
+    public PercentDiscountPolicy(String name, double percent, Set<DiscountCondition> conditions) {
+        super(name, conditions);
         this.percent = percent;
     }
 

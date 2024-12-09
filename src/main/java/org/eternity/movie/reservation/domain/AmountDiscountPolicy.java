@@ -14,8 +14,8 @@ import java.util.Set;
 public class AmountDiscountPolicy extends DiscountPolicy {
     private Money discountAmount;
 
-    public AmountDiscountPolicy(Money discountAmount, Set<DiscountCondition> conditions) {
-        super(conditions);
+    public AmountDiscountPolicy(String name, Money discountAmount, Set<DiscountCondition> conditions) {
+        super(name, conditions);
         this.discountAmount = discountAmount;
     }
 
